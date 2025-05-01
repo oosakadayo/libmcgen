@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "@types/node": "^22.13.1",
+    "ts-node": "^10.9.2"
+  },
+  "name": "libmcgen",
+  "version": "0.0.50",
+  "main": "out/index.js",
+  "types": "src/index.ts",
+  "author": "Mythicus Studios",
+  "license": "ISC",
+  "scripts": {
+    "start": "tsc && node out/index.js",
+    "pub": "tsc && npm version patch --force && npm publish"
+  }
+}
