@@ -21,3 +21,4 @@ export type ComponentGroup = {
 export type TypeFamilyComponent = {
   family: string[];
 }
+
