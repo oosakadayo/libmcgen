@@ -5,13 +5,13 @@
     "ts-node": "^10.9.2"
   },
   "name": "libmcgen",
-  "version": "0.0.55",
+  "version": "0.0.56",
   "main": "out/index.js",
   "types": "src/index.ts",
   "author": "Mythicus Studios",
   "license": "ISC",
   "scripts": {
     "start": "tsc && node out/index.js",
-    "pub": "tsc && npm version patch --force && npm publish"
+    "pushy": "tsc && npm version patch --force && npm publish"
   }
 }
