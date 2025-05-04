@@ -11,7 +11,7 @@ const fs_1 = require("fs");
 exports.BlockCardinalDirection = "minecraft:cardinal_direction";
 function saveBlock(block, path) {
     let stringToSave = JSON.stringify(block, undefined, 2);
-    let fileName = path + "/" + block["minecraft:block"].description.identifier.split(":")[0];
+    let fileName = path + "/" + block["minecraft:block"].description.identifier.split(":")[1] + ".json";
     if (!(0, fs_1.existsSync)(path)) {
         (0, fs_1.mkdirSync)(path, { recursive: true });
     }

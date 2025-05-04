@@ -45,6 +45,12 @@ export type Block = {
 export type BlockDescription = {
   identifier:string;
   traits?:BlockTraits;
+  menu_category?:BlockMenuCategory;
+}
+
+export type BlockMenuCategory = {
+  category?:string;
+  group?:string;
 }
 
 export type BlockTraits = {
@@ -53,12 +59,80 @@ export type BlockTraits = {
 
 export type BlockPlacementDirection = {
   enabled_states?: string[];
+  y_rotation_offset?:number;
 }
 
 export type BlockComponentGroup = {
-  "minecraft:geometry"?:string;
+  "minecraft:geometry"?:string|BlockGeometry;
   "minecraft:material_instances"?:BlockMaterialInstances;
   "minecraft:transformation"?:BlockTransformation;
+  "minecraft:collision_box"?:BlockCollisionBox|boolean;
+  "minecraft:selection_box"?:BlockSelectionBox|boolean;
+  "minecraft:destructible_by_mining"?:BlockDestructibleByMining|boolean;
+  "minecraft:destructible_by_explosion"?:BlockDestructibleByExplosion|boolean;
+  "minecraft:display_name"?:string;
+  "minecraft:custom_components"?:string[];
+  "minecraft:tick"?:BlockTick;
+  "minecraft:light_dampening"?:number;
+  "minecraft:light_emission"?:number;
+  "minecraft:map_color"?:[number,number,number];
+  "minecraft:crafting_table"?:BlockCraftingTable;
+  "minecraft:entity_fall_on"?:BlockEntityFallOn;
+  "minecraft:flammable"?:BlockFlammable|boolean;
+  "minecraft:friction"?:number;
+  "minecraft:item_visual"?:BlockItemVisual;
+  "minecraft:loot"?:string;
+}
+
+export type BlockItemVisual = {
+  geometry:BlockGeometry;
+  material_instances:BlockMaterialInstances;
+}
+
+export type BlockFlammable = {
+  catch_chance_modifier:number;
+  destroy_chance_modifier:number;
+}
+
+export type BlockEntityFallOn = {
+  min_fall_distance:number;
+}
+
+export type BlockCraftingTable = {
+  table_name:string;
+  crafting_tags:string[];
+}
+
+export type BlockTick = {
+  interval_range:[number,number];
+  looping:boolean;
+}
+
+export type BlockGeometry = {
+  identifier:string;
+  bone_visibility:BlockBoneVisibility;
+}
+
+export type BlockBoneVisibility = {
+  [key:string]:boolean|string;
+}
+
+export type BlockDestructibleByMining = {
+  seconds_to_destroy:number;
+}
+
+export type BlockDestructibleByExplosion = {
+  explosion_resistance:number;
+}
+
+export type BlockCollisionBox = {
+  origin:[number,number,number];
+  size:[number,number,number];
+}
+
+export type BlockSelectionBox = {
+  origin:[number,number,number];
+  size:[number,number,number];
 }
 
 export type BlockTransformation = {
@@ -74,6 +148,8 @@ export type BlockMaterialInstances = {
 export type BlockMaterialInstance = {
   texture:string;
   render_method:string;
+  ambient_occlusion:boolean;
+  face_dimming:boolean;
 }
 
 export type Permutation = {
@@ -83,7 +159,7 @@ export type Permutation = {
 
 export function saveBlock(block:BlockFile,path:string) {
   let stringToSave:string = JSON.stringify(block, undefined, 2);
-  let fileName:string = path+"/"+block["minecraft:block"].description.identifier.split(":")[0];
+  let fileName:string = path+"/"+block["minecraft:block"].description.identifier.split(":")[1]+".json";
   if (!existsSync(path)) {
     mkdirSync(path, { recursive: true });
   }
