@@ -40,12 +40,20 @@ export type BlockFile = {
 export type Block = {
   description:BlockDescription;
   components:BlockComponentGroup;
+  permutations:BlockPermutation[];
 }
 
 export type BlockDescription = {
   identifier:string;
   traits?:BlockTraits;
   menu_category?:BlockMenuCategory;
+  states:BlockStates;
+}
+
+export type BlockState = number[]|boolean[]|string[]
+
+export type BlockStates = {
+  [key:string]:BlockState;
 }
 
 export type BlockMenuCategory = {
@@ -75,13 +83,37 @@ export type BlockComponentGroup = {
   "minecraft:tick"?:BlockTick;
   "minecraft:light_dampening"?:number;
   "minecraft:light_emission"?:number;
-  "minecraft:map_color"?:[number,number,number];
+  "minecraft:map_color"?:[number,number,number]|string|BlockMapColor;
   "minecraft:crafting_table"?:BlockCraftingTable;
   "minecraft:entity_fall_on"?:BlockEntityFallOn;
   "minecraft:flammable"?:BlockFlammable|boolean;
   "minecraft:friction"?:number;
   "minecraft:item_visual"?:BlockItemVisual;
   "minecraft:loot"?:string;
+  "minecraft:placement_filter"?:BlockPlacementFilter;
+  "minecraft:replaceable"?:{};
+}
+
+export type BlockPlacementFilter = {
+  conditions: BlockPlacementFilterCondition[];
+}
+
+export type BlockDirections = "up"|"down"|"north"|"south"|"east"|"west"|"side"|"all";
+export type BlockPlacementFilterCondition = {
+  allowed_faces?:BlockDirections[];
+  block_filter?:BlockFilter[];
+}
+export type BlockFilter = string|{
+  name?:string;
+  states?:BlockFilterStates;
+  tags?:string;
+}
+export type BlockFilterStates = {
+  [key:string]:string|number|boolean;
+}
+
+export type BlockMapColor = {
+  color:string;
 }
 
 export type BlockItemVisual = {
@@ -138,7 +170,9 @@ export type BlockSelectionBox = {
 export type BlockTransformation = {
   rotation?:[number,number,number];
   scale?:[number,number,number];
-  position?:[number,number,number];
+  translation?:[number,number,number];
+  rotation_pivot?:[number,number,number];
+  scale_pivot?:[number,number,number];
 }
 
 export type BlockMaterialInstances = {
@@ -146,13 +180,13 @@ export type BlockMaterialInstances = {
 }
 
 export type BlockMaterialInstance = {
-  texture:string;
-  render_method:string;
-  ambient_occlusion:boolean;
-  face_dimming:boolean;
+  texture?:string;
+  render_method?:"alpha_test"|"alpha_test_single_sided"|"blend"|"double_sided"|"opaque";
+  ambient_occlusion?:boolean;
+  face_dimming?:boolean;
 }
 
-export type Permutation = {
+export type BlockPermutation = {
   condition:string;
   components:BlockComponentGroup;
 }
@@ -170,3 +204,9 @@ export function saveBlock(block:BlockFile,path:string) {
     console.log(e.message);
   });
 }
+
+//////////////////////////////////////////////////////////////////////////////
+//                                  ITEMS                                   //
+//////////////////////////////////////////////////////////////////////////////
+
+
