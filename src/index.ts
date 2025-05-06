@@ -209,4 +209,158 @@ export function saveBlock(block:BlockFile,path:string) {
 //                                  ITEMS                                   //
 //////////////////////////////////////////////////////////////////////////////
 
+export type ItemFile = {
+  format_version:string;
+  "minecraft:item":Item;
+}
 
+export type Item = {
+  description:ItemDescription;
+  components:ItemComponentGroup;
+}
+
+export type ItemDescription = {
+  identifier:string;
+  menu_category?:ItemMenuCategory;
+}
+
+export type ItemMenuCategory = {
+  category:string;
+}
+
+export type ItemComponentGroup = {
+  "minecraft:allow_off_hand"?:ItemAllowOffHand|boolean;
+  "minecraft:block_placer"?:ItemBlockPlacer;
+  "minecraft:bundle_interaction"?:ItemBundleInteraction;
+  "minecraft:can_destroy_in_creatyive"?:ItemCanDestroyInCreative;
+  "minecraft:compostable"?:ItemCompostable;
+  "minecraft:cooldown"?:ItemCooldown;
+  "minecraft:custom_components"?:string[];
+  "minecraft:damage"?:ItemDamage;
+  "minecraft:damage_absorption"?:ItemDamageAbsorption;
+  "minecraft:digger"?:ItemDigger;
+  "minecraft:display_name"?:ItemDisplayName|string;
+  "minecraft:durability"?:ItemDurability;
+  "minecraft:durability_sensor"?:ItemDurabilitySensor;
+  "minecraft:dyeable"?:ItemDyeable;
+  "minecraft:enchantable"?:ItemEnchantable;
+  "minecraft:entity_placer"?:ItemEntityPlacer;
+  "minecraft:food"?:ItemFood;
+  "minecraft:fuel"?:ItemFuel;
+}
+
+export type ItemFuel = {
+  duration:number;
+}
+
+export type ItemFood = {
+  can_always_eat?:boolean;
+  nutrition?:number;
+  saturation_modifier?:number;
+  using_converts_to?:string;
+}
+
+export type ItemEntityPlacer = {
+  entity:string;
+  dispense_on?:string[];
+  use_on?:string[];
+}
+
+export type ItemEnchantableSlot = "armor_feet"|"armor_torso"|"armor_head"|"armor_legs"|"axe"|"bow"|"cosmetic_head"|"crossbow"|"elytra"|"fishing_rod"|"flintsteel"|"hoe"|"pickaxe"|"shears"|"shield"|"shovel"|"sword"|"all";
+
+export type ItemEnchantable = {
+  slot?:ItemEnchantableSlot;
+  value?:number;
+}
+
+export type ItemDyeable = {
+  default_color:string;
+}
+
+export type ItemDurabilitySensor = {
+  durability_thresholds:ItemDurabilitySensorDurabilityThreshold[];
+}
+
+export type ItemDurabilitySensorDurabilityThreshold = {
+  durability:number;
+  particle_type?:string;
+  sound_event?:string;
+}
+
+export type ItemDurability = {
+  damage_chance:ItemDurabilityDamageChance
+  max_durability:number;
+}
+
+export type ItemDurabilityDamageChance = {
+  min:number;
+  max:number;
+}
+
+export type ItemDisplayName = {
+  value:string;
+}
+
+export type ItemDigger = {
+  use_efficency:boolean;
+  destroy_speeds:ItemDiggerDestroySpeed[];
+}
+
+export type ItemDiggerDestroySpeed = {
+  block:string|ItemDiggerDestroySpeedBlock;
+  speed:number;
+}
+export type ItemDiggerDestroySpeedBlock = {
+  tags:string;
+}
+
+//TODO get all strings here;
+export type ItemDamageAbsorption = {
+  absorbable_causes: string[];
+}
+
+export type ItemDamage = {
+  value:number;
+}
+
+//TODO get all category strings;
+export type ItemCooldown = {
+  category:string;
+  duration:number;
+}
+
+export type ItemCompostable = {
+  composting_chance:number;
+}
+
+export type ItemAllowOffHand = {
+  value:boolean;
+}
+
+export type ItemBlockPlacer = {
+  block:string;
+  use_on:string[];
+  replace_block_item:boolean;
+}
+
+export type ItemBundleInteraction = {
+  num_viewable_slots:number;
+}
+
+export type ItemCanDestroyInCreative = {
+  value:boolean;
+}
+
+export function saveItem(item:ItemFile,path:string) {
+  let stringToSave:string = JSON.stringify(item, undefined, 2);
+  let fileName:string = path+"/"+item["minecraft:item"].description.identifier.split(":")[1]+".json";
+  if (!existsSync(path)) {
+    mkdirSync(path, { recursive: true });
+  }
+  writeFile(fileName, stringToSave, (e) => {
+    if (e == undefined) {
+      return;
+    }
+    console.log(e.message);
+  });
+}
