@@ -39,15 +39,15 @@ export type BlockFile = {
 
 export type Block = {
   description:BlockDescription;
-  components:BlockComponentGroup;
-  permutations:BlockPermutation[];
+  components?:BlockComponentGroup;
+  permutations?:BlockPermutation[];
 }
 
 export type BlockDescription = {
   identifier:string;
   traits?:BlockTraits;
   menu_category?:BlockMenuCategory;
-  states:BlockStates;
+  states?:BlockStates;
 }
 
 export type BlockState = number[]|boolean[]|string[]
