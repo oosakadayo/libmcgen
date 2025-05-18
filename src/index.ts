@@ -6,7 +6,7 @@ export type EntityFile = {
 };
 export type Entity = {
   description: EntityDescription;
-  components: ComponentGroup;
+  components: EntityComponentGroup;
 };
 
 export type EntityDescription = {
@@ -16,12 +16,65 @@ export type EntityDescription = {
   is_experimental: boolean;
 };
 
-export type ComponentGroup = {
-  "minecraft:type_family"?: TypeFamilyComponent;
+export type EntityComponentGroup = {
+  "minecraft:type_family"?: EntityTypeFamilyComponent;
 };
 
-export type TypeFamilyComponent = {
+export type EntityTypeFamilyComponent = {
   family: string[];
+};
+
+export type EntityBoolProperty = {
+  type: "bool",
+  default: boolean,
+  client_sync: boolean,
+};
+
+export type EntityIntProperty = {
+  type: "int",
+  default: number,
+  range: [number, number],
+  client_sync: boolean,
+};
+export type EntityFloatProperty = {
+  type: "float",
+  default: number,
+  range: [number, number],
+  client_sync: boolean,
+};
+export type EntityEnumProperty = {
+  type: "enum",
+  values: string[],
+  default: string,
+  client_sync: boolean,
+};
+export type EntityProperty = EntityBoolProperty | EntityEnumProperty | EntityIntProperty | EntityFloatProperty;
+
+export type EntityEvent = {
+  add?: EntityEventAddRemove,
+  remove?: EntityEventAddRemove,
+  queue_command?: EntityEventCommand,
+};
+export type EntityEventCommand = {
+  target: string | "self",
+  command: string | string[]
+};
+export type EntityEventAddRemove = {
+  component_groups: string[],
+};
+export type EntityEventRandomize = EntityEvent & {
+  weight: number,
+};
+export type EntityFilterSingle = {
+  test?: string,
+  subject?: string,
+  value?: string | boolean | number,
+  domain?: string,
+};
+export type EntityFilter = EntityFilterSingle | EntityFilterSingle[]
+export type EntityFilterComplete = EntityFilter | {
+  all_of?: EntityFilterComplete,
+  any_of?: EntityFilterComplete,
 };
 
 ///////////////////////////////////////////////////////////////////
@@ -79,8 +132,8 @@ export type BlockComponentGroup = {
   "minecraft:selection_box"?: BlockSelectionBox | boolean;
   "minecraft:destructible_by_mining"?: BlockDestructibleByMining | boolean;
   "minecraft:destructible_by_explosion"?:
-    | BlockDestructibleByExplosion
-    | boolean;
+  | BlockDestructibleByExplosion
+  | boolean;
   "minecraft:display_name"?: string;
   "minecraft:custom_components"?: string[];
   "minecraft:tick"?: BlockTick;
@@ -117,10 +170,10 @@ export type BlockPlacementFilterCondition = {
 export type BlockFilter =
   | string
   | {
-      name?: string;
-      states?: BlockFilterStates;
-      tags?: string;
-    };
+    name?: string;
+    states?: BlockFilterStates;
+    tags?: string;
+  };
 export type BlockFilterStates = {
   [key: string]: string | number | boolean;
 };
@@ -204,11 +257,11 @@ export type BlockMaterialInstances = {
 export type BlockMaterialInstance = {
   texture?: string;
   render_method?:
-    | "alpha_test"
-    | "alpha_test_single_sided"
-    | "blend"
-    | "double_sided"
-    | "opaque";
+  | "alpha_test"
+  | "alpha_test_single_sided"
+  | "blend"
+  | "double_sided"
+  | "opaque";
   ambient_occlusion?: boolean;
   face_dimming?: boolean;
 };
