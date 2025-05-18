@@ -278,6 +278,14 @@ export type ItemComponentGroup = {
   "minecraft:entity_placer"?: ItemEntityPlacer;
   "minecraft:food"?: ItemFood;
   "minecraft:fuel"?: ItemFuel;
+  "minecraft:icon"?: string | ItemIcon;
+};
+
+export type ItemIcon = {
+  textures: ItemIconTextures;
+};
+export type ItemIconTextures = {
+  default: string;
 };
 
 export type ItemFuel = {
@@ -388,8 +396,8 @@ export type ItemAllowOffHand = {
 
 export type ItemBlockPlacer = {
   block: string;
-  use_on: string[];
-  replace_block_item: boolean;
+  use_on?: string[];
+  replace_block_item?: boolean;
 };
 
 export type ItemBundleInteraction = {
