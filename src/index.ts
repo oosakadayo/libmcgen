@@ -71,11 +71,15 @@ export type EntityFilterSingle = {
   value?: string | boolean | number,
   domain?: string,
 };
-export type EntityFilter = EntityFilterSingle | EntityFilterSingle[]
+export type EntityFilter = EntityFilterSingle | EntityFilterComplete[]
 export type EntityFilterComplete = EntityFilter | {
   all_of?: EntityFilterComplete,
   any_of?: EntityFilterComplete,
 };
+
+let filters: EntityFilterComplete = {
+  test: "ciao"
+}
 
 ///////////////////////////////////////////////////////////////////
 //                                                               //
