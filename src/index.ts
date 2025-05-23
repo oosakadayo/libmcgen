@@ -641,3 +641,25 @@ export type FeatureAggregate = {
   early_out: string;
   features: string[];
 };
+
+export type FeatureTypeIdentifier =
+  | "minecraft:aggregate_feature"
+  | "minecraft:single_block_feature"
+  | "minecraft:feature_rules"
+  | "minecraft:scatter_feature"
+  | "minecraft:structure_template_feature";
+
+export function saveFeature(feature: any, type: string, path: string) {
+  let stringToSave: string = JSON.stringify(feature, undefined, 2);
+  let fileName: string =
+    path + "/" + feature[type].description.identifier.split(":")[1] + ".json";
+  if (!existsSync(path)) {
+    mkdirSync(path, { recursive: true });
+  }
+  writeFile(fileName, stringToSave, (e) => {
+    if (e == undefined) {
+      return;
+    }
+    console.log(e.message);
+  });
+}
