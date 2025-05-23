@@ -5,7 +5,7 @@
     "ts-node": "^10.9.2"
   },
   "name": "libmcgen",
-  "version": "0.0.82",
+  "version": "0.0.83",
   "main": "out/index.js",
   "types": "src/index.ts",
   "author": "Mythicus Studios",
