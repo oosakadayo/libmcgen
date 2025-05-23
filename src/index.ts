@@ -69,18 +69,23 @@ export type EntityEventAddRemove = {
 export type EntityEventRandomize = EntityEvent & {
   weight: number;
 };
-export type EntityFilterSingle = {
+
+///////////////////////////////////////////////////////////////////
+//               FILTERS                                         //
+///////////////////////////////////////////////////////////////////
+export type FilterSingle = {
   test?: string;
   subject?: string;
+  operator?: string;
   value?: string | boolean | number;
   domain?: string;
 };
-export type EntityFilter = EntityFilterSingle | EntityFilterSingle[];
-export type EntityFilterComplete =
-  | EntityFilter
+export type Filter = FilterSingle | FilterComplete[];
+export type FilterComplete =
+  | Filter
   | {
-      all_of?: EntityFilterComplete;
-      any_of?: EntityFilterComplete;
+      all_of?: FilterComplete;
+      any_of?: FilterComplete;
     };
 
 ///////////////////////////////////////////////////////////////////
@@ -510,9 +515,62 @@ export type FeatureDescription = {
 };
 
 export type FeatureStructureFile = {};
-export type FeatureStructure = {};
-export type FeatureRuleFile = {};
-export type FeatureRule = {};
+export type FeatureStructure = {
+  description: FeatureDescription;
+  structure_name: string;
+  adjustment_radius: number;
+  facing_direction: FeatureStructureFacingDirection;
+  constraints?: FeatureStructureConstraints;
+};
+export type FeatureStructureFacingDirection =
+  | "north"
+  | "west"
+  | "east"
+  | "south"
+  | "random";
+export type FeatureStructureConstraints = {
+  unburied?: {};
+  ungrounded?: {};
+};
+
+export type FeatureRuleFile = {
+  format_version: string;
+  "minecraft:feature_rules": FeatureRule;
+};
+export type FeatureRule = {
+  description: FeatureDescription & { places_feature: string };
+  conditions: FeatureRuleConditions;
+  distribution: FeatureRuleDistribution;
+};
+
+export type FeatureRuleConditions = {
+  placement_pass: FeatureRuleConditionsPlacementPass;
+  "minecraft:biome_filter": FilterComplete;
+};
+
+export type FeatureRuleDistribution = {
+  coordinate_eval_order: string;
+  iterations?: string | number;
+  scatter_chance?: string | number;
+  x: string | number | FeatureCoordinateDistribution;
+  y: string | number | FeatureCoordinateDistribution;
+  z: string | number | FeatureCoordinateDistribution;
+};
+
+export type FeatureRuleConditionsPlacementPass =
+  | "first_pass"
+  | "after_sky_pass"
+  | "after_surface_pass"
+  | "after_underground_pass"
+  | "before_sky_pass"
+  | "before_surface_pass"
+  | "before_underground_pass"
+  | "final_pass"
+  | "pregeneration_pass"
+  | "sky_pass"
+  | "surface_pass"
+  | "underground_pass";
+
 export type FeatureScatterFile = {
   format_version: string;
   "minecraft:scatter_feature": FeatureScatter;
