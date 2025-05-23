@@ -338,6 +338,22 @@ export type ItemComponentGroup = {
   "minecraft:food"?: ItemFood;
   "minecraft:fuel"?: ItemFuel;
   "minecraft:icon"?: string | ItemIcon;
+  "minecraft:wearable"?: ItemWearable;
+  "minecraft:use_modifiers"?: ItemUseModifiers;
+};
+
+export type ItemUseModifiers = {
+  movement_modifier?: number;
+  use_duration?: number;
+};
+
+export type ItemWearable = {
+  protection: number;
+  slot:
+    | "slot.armor.chest"
+    | "slot.armor.feet"
+    | "slot.armor.legs"
+    | "slot.armor.head";
 };
 
 export type ItemIcon = {
@@ -484,3 +500,51 @@ export function saveItem(item: ItemFile, path: string) {
     console.log(e.message);
   });
 }
+
+//////////////////////////////////////////////////////////////////////////////
+//                                  FEATURES                                //
+//////////////////////////////////////////////////////////////////////////////
+
+export type FeatureDescription = {
+  identifier: string;
+};
+
+export type FeatureStructureFile = {};
+export type FeatureStructure = {};
+export type FeatureRuleFile = {};
+export type FeatureRule = {};
+export type FeatureScatterFile = {
+  format_version: string;
+  "minecraft:scatter_feature": FeatureScatter;
+};
+export type FeatureScatter = {
+  description: FeatureDescription;
+  coordinate_eval_order?: string;
+  iterations?: string | number;
+  places_feature: string;
+  x: string | number | FeatureCoordinateDistribution;
+  y: string | number | FeatureCoordinateDistribution;
+  z: string | number | FeatureCoordinateDistribution;
+};
+export type FeatureCoordinateDistribution = {
+  extent: [number | string, number | string];
+  distribution: FeatureCoordinateDistributionDistribution;
+};
+export type FeatureCoordinateDistributionDistribution =
+  | "fixed_grid"
+  | "gaussian"
+  | "inverse_gaussian"
+  | "jittered_grid"
+  | "triangle"
+  | "uniform";
+
+export type FeatureGroupFile = {};
+export type FeatureGroup = {};
+export type FeatureBlockFile = {};
+export type FeatureBlock = {};
+export type FeatureOreFile = {};
+export type FeatureOre = {};
+export type FeatureSequenceFile = {};
+export type FeatureSequence = {};
+export type FeatureAggregateFile = {};
+export type FeatureAggregate = {};
