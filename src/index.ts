@@ -514,7 +514,10 @@ export type FeatureDescription = {
   identifier: string;
 };
 
-export type FeatureStructureFile = {};
+export type FeatureStructureFile = {
+  format_version: string;
+  "minecraft:structure_template_feature": FeatureStructure;
+};
 export type FeatureStructure = {
   description: FeatureDescription;
   structure_name: string;
@@ -531,6 +534,10 @@ export type FeatureStructureFacingDirection =
 export type FeatureStructureConstraints = {
   unburied?: {};
   ungrounded?: {};
+  block_intersection?: FeatureStructureConstraintsBlockIntersection;
+};
+export type FeatureStructureConstraintsBlockIntersection = {
+  block_allowlist: string[];
 };
 
 export type FeatureRuleFile = {
@@ -598,11 +605,39 @@ export type FeatureCoordinateDistributionDistribution =
 
 export type FeatureGroupFile = {};
 export type FeatureGroup = {};
-export type FeatureBlockFile = {};
-export type FeatureBlock = {};
+
+export type FeatureBlockFile = {
+  format_version: string;
+  "minecraft:single_block_feature": FeatureBlock;
+};
+export type FeatureBlock = {
+  description: FeatureDescription;
+  enforce_placement_rules: boolean;
+  enforce_survivability_rules: boolean;
+  places_block: FeatureBlockPlacesBlock;
+  may_replace: string[];
+  may_attach_to?: FeatureBlockMayAttachTo;
+};
+export type FeatureBlockPlacesBlock = {
+  name: string;
+  states?: { [key: string]: string | number | boolean };
+};
+export type FeatureBlockMayAttachTo = {
+  bottom?: string[];
+  top?: string[];
+  sides?: string[];
+};
+
 export type FeatureOreFile = {};
 export type FeatureOre = {};
 export type FeatureSequenceFile = {};
 export type FeatureSequence = {};
-export type FeatureAggregateFile = {};
-export type FeatureAggregate = {};
+export type FeatureAggregateFile = {
+  format_version: string;
+  "minecraft:aggregate_feature": FeatureAggregate;
+};
+export type FeatureAggregate = {
+  description: FeatureDescription;
+  early_out: string;
+  features: string[];
+};
