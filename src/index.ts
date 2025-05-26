@@ -20,6 +20,43 @@ export type EntityComponentGroup = {
   "minecraft:type_family"?: EntityTypeFamilyComponent;
 };
 
+export type EntitySlot =
+  | "slot.armor.head"
+  | "slot.armor.chest"
+  | "slot.armor.legs"
+  | "slot.armor.feet"
+  | "slot.armor.body";
+export type EntityInteractComponent = {
+  add_items?: EntityInteractComponentAddItems;
+  cooldown?: number;
+  cooldown_after_being_attacked?: number;
+  drop_item_slot?: EntitySlot | number;
+  drop_item_y_offset?: number;
+  equip_item_slot?: EntitySlot | number;
+  health_amount?: number;
+  hurt_item?: number;
+  interact_text?: string;
+  on_interact?: EntityTrigger;
+  play_sounds?: string | string[];
+  repair_entity_item?: EntityInteractComponentRepairEntityItem;
+  spawn_entities?: string | string[];
+  spawn_items?: EntityInteractComponentSpawnItems;
+  swing?: boolean;
+  transform_to_item?: string;
+  use_item?: true;
+  vibration: "shear" | "entity_die" | "entity_act" | "entity_interact";
+  interactions?: EntityInteractComponent[];
+};
+export type EntityInteractComponentSpawnItems = {
+  table: string;
+};
+export type EntityInteractComponentRepairEntityItem = {
+  amount: number;
+  slot: EntitySlot | number;
+};
+export type EntityInteractComponentAddItems = {
+  table: string;
+};
 export type EntityTypeFamilyComponent = {
   family: string[];
 };
@@ -53,11 +90,19 @@ export type EntityProperty =
   | EntityEnumProperty
   | EntityIntProperty
   | EntityFloatProperty;
+//TODO target specifications;
+export type EntityTrigger = {
+  filters: FilterComplete;
+  event: string;
+  target: string;
+};
 
 export type EntityEvent = {
   add?: EntityEventAddRemove;
   remove?: EntityEventAddRemove;
   queue_command?: EntityEventCommand;
+  sequence?: EntityEvent[];
+  filters?: FilterComplete;
 };
 export type EntityEventCommand = {
   target: string | "self";
@@ -73,6 +118,7 @@ export type EntityEventRandomize = EntityEvent & {
 ///////////////////////////////////////////////////////////////////
 //               FILTERS                                         //
 ///////////////////////////////////////////////////////////////////
+//TODO add subject specifications;
 export type FilterSingle = {
   test?: string;
   subject?: string;
@@ -296,7 +342,6 @@ export function saveBlock(block: BlockFile, path: string) {
     if (e == undefined) {
       return;
     }
-    console.log(e.message);
   });
 }
 
@@ -354,11 +399,7 @@ export type ItemUseModifiers = {
 
 export type ItemWearable = {
   protection: number;
-  slot:
-    | "slot.armor.chest"
-    | "slot.armor.feet"
-    | "slot.armor.legs"
-    | "slot.armor.head";
+  slot: EntitySlot;
 };
 
 export type ItemIcon = {
@@ -502,7 +543,6 @@ export function saveItem(item: ItemFile, path: string) {
     if (e == undefined) {
       return;
     }
-    console.log(e.message);
   });
 }
 
@@ -533,7 +573,7 @@ export type FeatureStructureFacingDirection =
   | "random";
 export type FeatureStructureConstraints = {
   unburied?: {};
-  ungrounded?: {};
+  grounded?: {};
   block_intersection?: FeatureStructureConstraintsBlockIntersection;
 };
 export type FeatureStructureConstraintsBlockIntersection = {
@@ -603,8 +643,14 @@ export type FeatureCoordinateDistributionDistribution =
   | "triangle"
   | "uniform";
 
-export type FeatureGroupFile = {};
-export type FeatureGroup = {};
+export type FeatureGroupFile = {
+  format_version: string;
+  "minecraft:weighted_random_feature": FeatureGroup;
+};
+export type FeatureGroup = {
+  description: FeatureDescription;
+  features: [string, number][];
+};
 
 export type FeatureBlockFile = {
   format_version: string;
@@ -615,8 +661,9 @@ export type FeatureBlock = {
   enforce_placement_rules: boolean;
   enforce_survivability_rules: boolean;
   places_block: FeatureBlockPlacesBlock;
-  may_replace: string[];
+  may_replace?: string[];
   may_attach_to?: FeatureBlockMayAttachTo;
+  may_not_attach_to?: FeatureBlockMayAttachTo;
 };
 export type FeatureBlockPlacesBlock = {
   name: string;
@@ -626,10 +673,23 @@ export type FeatureBlockMayAttachTo = {
   bottom?: string[];
   top?: string[];
   sides?: string[];
+  all?: string[];
 };
 
-export type FeatureOreFile = {};
-export type FeatureOre = {};
+export type FeatureOreFile = {
+  format_version: string;
+  "minecraft:ore_feature": FeatureOre;
+};
+export type FeatureOre = {
+  description: FeatureDescription;
+  count: number;
+  replace_rules: FeatureOreReplaceRules[];
+};
+export type FeatureOreReplaceRules = {
+  places_block: string;
+  may_replace: string[];
+};
+
 export type FeatureSequenceFile = {};
 export type FeatureSequence = {};
 export type FeatureAggregateFile = {
@@ -647,19 +707,24 @@ export type FeatureTypeIdentifier =
   | "minecraft:single_block_feature"
   | "minecraft:feature_rules"
   | "minecraft:scatter_feature"
-  | "minecraft:structure_template_feature";
+  | "minecraft:structure_template_feature"
+  | "minecraft:weighted_random_feature";
 
-export function saveFeature(feature: any, type: string, path: string) {
+export function saveFeature(
+  feature: any,
+  type: FeatureTypeIdentifier,
+  path: string
+) {
   let stringToSave: string = JSON.stringify(feature, undefined, 2);
   let fileName: string =
     path + "/" + feature[type].description.identifier.split(":")[1] + ".json";
-  if (!existsSync(path)) {
-    mkdirSync(path, { recursive: true });
+  let truePath = fileName.substring(0, fileName.lastIndexOf("/"));
+  if (!existsSync(truePath)) {
+    mkdirSync(truePath, { recursive: true });
   }
   writeFile(fileName, stringToSave, (e) => {
     if (e == undefined) {
       return;
     }
-    console.log(e.message);
   });
 }

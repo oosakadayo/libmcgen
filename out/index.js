@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BlockCardinalDirection = void 0;
 exports.saveBlock = saveBlock;
 exports.saveItem = saveItem;
+exports.saveFeature = saveFeature;
 const fs_1 = require("fs");
 ///////////////////////////////////////////////////////////////////
 //                                                               //
@@ -23,7 +24,6 @@ function saveBlock(block, path) {
         if (e == undefined) {
             return;
         }
-        console.log(e.message);
     });
 }
 function saveItem(item, path) {
@@ -39,6 +39,18 @@ function saveItem(item, path) {
         if (e == undefined) {
             return;
         }
-        console.log(e.message);
+    });
+}
+function saveFeature(feature, type, path) {
+    let stringToSave = JSON.stringify(feature, undefined, 2);
+    let fileName = path + "/" + feature[type].description.identifier.split(":")[1] + ".json";
+    let truePath = fileName.substring(0, fileName.lastIndexOf("/"));
+    if (!(0, fs_1.existsSync)(truePath)) {
+        (0, fs_1.mkdirSync)(truePath, { recursive: true });
+    }
+    (0, fs_1.writeFile)(fileName, stringToSave, (e) => {
+        if (e == undefined) {
+            return;
+        }
     });
 }
