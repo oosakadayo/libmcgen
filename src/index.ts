@@ -779,21 +779,42 @@ export type GeoUv = {
   uv_size: [number, number];
 };
 
+export function saveGeo(item: GeoFile, path: string, name: string) {
+  let stringToSave: string = JSON.stringify(item, undefined, 2);
+  let fileName: string = path + "/" + name + ".json";
+  if (!existsSync(path)) {
+    mkdirSync(path, { recursive: true });
+  }
+  writeFile(fileName, stringToSave, (e) => {
+    if (e == undefined) {
+      return;
+    }
+  });
+}
+
 ///////////////
 // Java Geo  //
 ///////////////
 
 export type JGeoFile = {
   credit?: string;
-  elements: JGeoElement[];
-  groups: JGeoGroup[];
+  parent?: string;
+  elements?: JGeoElement[];
+  textures?: JGeoTextures;
+  groups?: JGeoGroup[];
+  ambientocclusion?: boolean;
+  render_type?: string;
+};
+export type JGeoTextures = {
+  [key: string]: string;
 };
 export type JGeoElement = {
   from?: [number, number, number];
   to?: [number, number, number];
   rotation?: JGeoElementRotation;
   color?: number;
-  faces: JGeoElementFaces;
+  shade?: boolean;
+  faces?: JGeoElementFaces;
 };
 export type JGeoElementFaces = {
   north?: JGeoElementFace;
@@ -820,3 +841,51 @@ export type JGeoGroup =
       color?: number;
       children?: JGeoGroup[];
     };
+
+////////////////
+//  Manifest  //
+////////////////
+export type ManifestFile = {
+  format_version: number;
+  metadata?: ManifestMetadata;
+  modules?: ManifestModule[];
+  dependencies?: ManifestDependency[];
+  header?: ManifestHeader;
+};
+export type ManifestHeader = {
+  name: string;
+  description: string;
+  uuid: string;
+  pack_scope?: string;
+  version: [number, number, number];
+  min_engine_version: [number, number, number];
+};
+export type ManifestModule = {
+  type: string;
+  uuid: string;
+  version: [number, number, number];
+  language?: string;
+  entry?: string;
+};
+export type ManifestMetadata = {
+  authors?: string[];
+  product_type?: string;
+};
+export type ManifestDependency = {
+  module_name?: string;
+  version?: string | [number, number, number];
+  uuid?: string;
+};
+
+export function saveManifest(item: GeoFile, path: string) {
+  let stringToSave: string = JSON.stringify(item, undefined, 2);
+  let fileName: string = path + "/manifest.json";
+  if (!existsSync(path)) {
+    mkdirSync(path, { recursive: true });
+  }
+  writeFile(fileName, stringToSave, (e) => {
+    if (e == undefined) {
+      return;
+    }
+  });
+}

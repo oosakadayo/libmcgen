@@ -4,6 +4,8 @@ exports.BlockCardinalDirection = void 0;
 exports.saveBlock = saveBlock;
 exports.saveItem = saveItem;
 exports.saveFeature = saveFeature;
+exports.saveGeo = saveGeo;
+exports.saveManifest = saveManifest;
 const fs_1 = require("fs");
 ///////////////////////////////////////////////////////////////////
 //                                                               //
@@ -47,6 +49,30 @@ function saveFeature(feature, type, path) {
     let truePath = fileName.substring(0, fileName.lastIndexOf("/"));
     if (!(0, fs_1.existsSync)(truePath)) {
         (0, fs_1.mkdirSync)(truePath, { recursive: true });
+    }
+    (0, fs_1.writeFile)(fileName, stringToSave, (e) => {
+        if (e == undefined) {
+            return;
+        }
+    });
+}
+function saveGeo(item, path, name) {
+    let stringToSave = JSON.stringify(item, undefined, 2);
+    let fileName = path + "/" + name + ".json";
+    if (!(0, fs_1.existsSync)(path)) {
+        (0, fs_1.mkdirSync)(path, { recursive: true });
+    }
+    (0, fs_1.writeFile)(fileName, stringToSave, (e) => {
+        if (e == undefined) {
+            return;
+        }
+    });
+}
+function saveManifest(item, path) {
+    let stringToSave = JSON.stringify(item, undefined, 2);
+    let fileName = path + "/manifest.json";
+    if (!(0, fs_1.existsSync)(path)) {
+        (0, fs_1.mkdirSync)(path, { recursive: true });
     }
     (0, fs_1.writeFile)(fileName, stringToSave, (e) => {
         if (e == undefined) {
