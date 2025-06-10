@@ -778,3 +778,45 @@ export type GeoUv = {
   uv: [number, number];
   uv_size: [number, number];
 };
+
+///////////////
+// Java Geo  //
+///////////////
+
+export type JGeoFile = {
+  credit?: string;
+  elements: JGeoElement[];
+  groups: JGeoGroup[];
+};
+export type JGeoElement = {
+  from?: [number, number, number];
+  to?: [number, number, number];
+  rotation?: JGeoElementRotation;
+  color?: number;
+  faces: JGeoElementFaces;
+};
+export type JGeoElementFaces = {
+  north?: JGeoElementFace;
+  east?: JGeoElementFace;
+  south?: JGeoElementFace;
+  west?: JGeoElementFace;
+  up?: JGeoElementFace;
+  down?: JGeoElementFace;
+};
+export type JGeoElementFace = {
+  uv: [number, number, number, number];
+  texture: string;
+};
+export type JGeoElementRotation = {
+  angle: number;
+  axis: "y" | "x" | "z";
+  origin: [number, number, number];
+};
+export type JGeoGroup =
+  | number
+  | {
+      name: string;
+      origin?: [number, number, number];
+      color?: number;
+      children?: JGeoGroup[];
+    };
