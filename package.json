@@ -8,8 +8,8 @@
   "version": "0.0.87",
   "main": "out/index.js",
   "types": "src/index.ts",
-  "author": "Mythicus Studios",
-  "license": "ISC",
+  "author": "DaveDev",
+  "license": "GNU",
   "scripts": {
     "start": "tsc && node out/index.js",
     "pushy": "tsc && npm version patch --force && npm publish"

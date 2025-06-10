@@ -728,3 +728,53 @@ export function saveFeature(
     }
   });
 }
+
+////////////////
+//   MODELS   //
+////////////////
+
+export type GeoFile = {
+  format_version: string;
+  "minecraft:geometry": Geo[];
+};
+
+export type Geo = {
+  description: GeoDescription;
+  bones: GeoBone[];
+};
+
+export type GeoDescription = {
+  identifier: string;
+  texture_width?: number;
+  texture_height?: number;
+  visible_bounds_width?: number;
+  visible_bounds_height?: number;
+  visible_bounds_offset?: [number, number, number];
+};
+
+export type GeoBone = {
+  name: string;
+  parent?: string;
+  pivot?: [number, number, number];
+  cubes?: GeoCube[];
+};
+export type GeoCube = {
+  origin: [number, number, number];
+  size: [number, number, number];
+  pivot?: [number, number, number];
+  rotation?: [number, number, number];
+  uv?: [number, number] | GeoUvFaces;
+};
+
+export type GeoUvFaces = {
+  north?: GeoUv;
+  east?: GeoUv;
+  south?: GeoUv;
+  west?: GeoUv;
+  up?: GeoUv;
+  down?: GeoUv;
+};
+export type GeoUv = {
+  uv: [number, number];
+  uv_size: [number, number];
+};
